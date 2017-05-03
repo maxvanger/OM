@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Open Music</string>
+    <string name="action_settings">Settings</string>
+    <string name="next">next</string>
+    <string name="replay">replay</string>
+    <string name="attempts">attempts</string>
+    <string name="score">score</string>
+    <string name="score_total">score total</string>
+</resources>

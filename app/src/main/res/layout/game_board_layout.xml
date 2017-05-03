@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_weight="0"
+        android:padding="8dp"
+        >
+
+        <TextView
+            android:id="@+id/album_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28dp"
+            android:paddingBottom="20dp"
+            android:text="Goldberg Variations"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/text_attempts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="16dp"
+            android:text="attempts: "
+            android:layout_alignBottom="@+id/album_title"
+            />
+        <TextView
+            android:id="@+id/attempts_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/text_attempts"
+            android:paddingTop="32dp"
+            android:textSize="20dp"
+            android:text="0"
+            />
+
+        <ImageView
+            android:id="@+id/btn_hint"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_lamp"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/grid_space"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        app:orientation="horizontal"
+        />
+
+    <ListView
+        android:id="@+id/titles_list"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_weight="0"
+        android:layout_marginBottom="8dp"
+        />
+
+</LinearLayout>
