@@ -27,6 +27,10 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.q_artz.vanger.openmusic.DialogScore;
+import com.q_artz.vanger.openmusic.Players.ISound;
+import com.q_artz.vanger.openmusic.Players.SoundExoPlayer;
+import com.q_artz.vanger.openmusic.Players.SoundIJKPlayer;
+import com.q_artz.vanger.openmusic.Players.SoundMediaPlayer;
 import com.q_artz.vanger.openmusic.Prefs;
 import com.q_artz.vanger.openmusic.network.Config;
 import com.q_artz.vanger.openmusic.network.PlaylistSC;
@@ -73,9 +77,8 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
     private List<Track> mTracks;
     private List<Track> mCustomTrackList;
     private int[] mappingArray;
+    private ISound[] puzzleSounds;
     private ExoPlayer[] mExoPlayers;
-    private ExoPlayer mPlayer;
-    private MediaSource[] mediaSources;
 
     public static PuzzlePresenter getInstance(GameBoardView view){
         mView = view;
@@ -90,8 +93,8 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
         //init mX and mY by Prefs's values;
         page = 0;   // get it from Prefs
         mTracks = new ArrayList<>();
-        mX = 4;
-        mY = 5;
+        mX = 2;
+        mY = 3;
     }
 
     private void initGame(){
@@ -106,15 +109,6 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
 
     public void loadGame(){
         initGame();
-
-        mLoadControl = new DefaultLoadControl();
-        mTrackSelector = new DefaultTrackSelector();
-        mDataSource = new DefaultHttpDataSourceFactory(mUserAgent,null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,true);
-        mHandler = new Handler();
-//        mediaSources = new MediaSource[mCount];
-//        mPlayer = ExoPlayerFactory.newSimpleInstance(mApplicationContext, mTrackSelector, mLoadControl);
-
         loadSoundCloudList();
     }
 
@@ -125,8 +119,8 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
     }
 
     public void nextGame(){
-        for(int i=0;i<mExoPlayers.length;i++){
-            mExoPlayers[i].release();
+        for(int i=0;i<puzzleSounds.length;i++){
+            puzzleSounds[i].release();
         }
         page++;
         mCustomTrackList = getCustomList(mTracks,mCount,page);
@@ -139,13 +133,10 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
 
     @Override
     public void touch(int index) {
-
-
         //stop guessed music pair
         if (isBingo) {
             isBingo=false;
             stopPlayer(firstIndex);
-            //releasePlayer(firstIndex);
         }
 
         mView.touchPuzzleAnim(index);
@@ -240,60 +231,15 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
 
     private void preparePlayers(List<Track> playList){
         int i=0;
-        mExoPlayers = new ExoPlayer[mCount];
+        puzzleSounds = new ISound[mCount];
 
         for(Track track:playList){
-            DataSource.Factory dataSource = new DefaultHttpDataSourceFactory(mUserAgent,null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-                    DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,true);
-            LoadControl loadControl = new DefaultLoadControl();
-
-            ExoPlayer mp = ExoPlayerFactory.newSimpleInstance(mApplicationContext, mTrackSelector, loadControl);
-
-            MediaSource mediaSource = new ExtractorMediaSource(
-                    Uri.parse(track.getStreamUrl() + "?client_id=" + Config.CLIENT_ID),
-                    dataSource, Mp3Extractor.FACTORY,mHandler,null);
-           // mediaSources[i]=mediaSource;
-
-
-/*            Mp3Extractor mp3Extractor = new Mp3Extractor();
-            dataSource = new DefaultUriDataSource("musicStream", transferListener);
-            sampleSource = new ExtractorSampleSource(uri, dataSource, mp3Extractor, 1, BUFFER_SIZE);
-            MediaCodecAudioRenderer audioRenderer = new MediaCodecAudioRenderer(sampleSource, null, true);
-            ExoPlayer pl = ExoPlayerFactory.newSimpleInstance();
-            pl.prepare(audioRenderer);*/
-            mp.addListener(new ExoPlayer.EventListener() {
-                @Override
-                public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-                }
-
-                @Override
-                public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-                }
-
-                @Override
-                public void onLoadingChanged(boolean isLoading) {
-//                    Log.d(TAG,"Loading Change: "+isLoading);
-                }
-
-                @Override
-                public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
-                }
-
-                @Override
-                public void onPlayerError(ExoPlaybackException error) {
-                    Log.d(TAG,"Error with ExoPlayer loading: "+error + "/" + error.getCause());
-                }
-
-                @Override
-                public void onPositionDiscontinuity() {
-
-                }
-            });
-            mp.prepare(mediaSource);
-            mExoPlayers[i]=mp;
+            String uri = track.getStreamUrl() + "?client_id=" + Config.CLIENT_ID;
+//            ISound player = new SoundExoPlayer(mApplicationContext,uri);
+//            ISound player = new SoundMediaPlayer(mApplicationContext,uri);
+            ISound player = new SoundIJKPlayer(mApplicationContext,uri);
+            player.init();
+            puzzleSounds[i] = player;
             i++;
         }
     }
@@ -311,13 +257,17 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
 
     private void startPlayer(int index){
         int playerIndex = mappingArray[index];
-        mExoPlayers[playerIndex].setPlayWhenReady(true);
+        puzzleSounds[playerIndex].play();
     }
 
     private void stopPlayer(int index){
         int playerIndex = mappingArray[index];
-        mExoPlayers[playerIndex].seekTo(0);
-        mExoPlayers[playerIndex].setPlayWhenReady(false);
+        puzzleSounds[playerIndex].stop();
+    }
+
+    private void releasePlayer(int index){
+        int playerIndex = mappingArray[index];
+        puzzleSounds[playerIndex].release();
     }
 
     public void onStop(){
@@ -325,27 +275,5 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
     }
 
     public int mappingIndex(int index){ return mappingArray[index];}
-
-    private void releasePlayer(int index){
-        int playerIndex = mappingArray[index];
-        mExoPlayers[playerIndex].release();
-    }
-
-/*  // in case with one ExoPlayer for all puzzles
-    private void startPlayer2(int index){
-        int i = mappingArray[index];
-        if (i != mappingArray[firstIndex]) {
-            mPlayer.prepare(mediaSources[i]);
-        }
-        mPlayer.setPlayWhenReady(true);
-    }
-
-    private void stopPlayer2(int index){
-        mPlayer.setPlayWhenReady(false);
-        mPlayer.seekTo(0);
-    }
-
-    private void releasePlayer2(int index){ mPlayer.release();}
-*/
 
 }

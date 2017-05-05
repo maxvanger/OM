@@ -34,5 +34,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.google.android.exoplayer:exoplayer:r2.1.1'
     compile 'com.android.support:gridlayout-v7:25.1.0'
-    compile 'com.android.support:percent:24.2.1'
+    compile 'com.android.support:percent:25.1.0'
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.7.9'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.7.9'
 }

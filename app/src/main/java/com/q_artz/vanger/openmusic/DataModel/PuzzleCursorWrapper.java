@@ -2,6 +2,7 @@ package com.q_artz.vanger.openmusic.DataModel;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import com.q_artz.vanger.openmusic.DataModel.PuzzleDbSchema.PuzzleTable;
 
 /**
  * Created by vanger on 14/11/16.
