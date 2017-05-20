@@ -266,7 +266,7 @@ public class GameBoardActivity extends AppCompatActivity implements GameBoardVie
             vg = (ViewGroup) grid.getChildAt(i);
             View frontView = vg.getChildAt(0);
 
-            if (flag) drw = new BitmapDrawable(hintImages[mPresenter.mappingIndex(i)]);
+            if (flag) drw = new BitmapDrawable(hintImages[mPresenter.mappingIndex(i) % hintImages.length]);
             else drw = cardFrontDrawable;
 
             setBackground(frontView, drw);

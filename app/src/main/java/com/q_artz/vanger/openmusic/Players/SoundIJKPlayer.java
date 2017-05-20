@@ -41,19 +41,25 @@ public class SoundIJKPlayer implements ISound {
             @Override
             public void onPrepared(IMediaPlayer iMediaPlayer) {
                 isPrepared = true;
+                iMediaPlayer.pause();
             }
         });
     }
 
     @Override
     public void play() {
-        player.start();
+        player.setOnSeekCompleteListener(new IMediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(IMediaPlayer iMediaPlayer) {
+            player.start();
+            }
+        });
+        player.seekTo(0);
     }
 
     @Override
     public void stop() {
         player.pause();
-        player.seekTo(0);
     }
 
     @Override

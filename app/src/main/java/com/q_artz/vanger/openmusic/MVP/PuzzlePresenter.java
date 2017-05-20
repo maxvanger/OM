@@ -2,33 +2,14 @@ package com.q_artz.vanger.openmusic.MVP;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.extractor.mp3.Mp3Extractor;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.q_artz.vanger.openmusic.DialogScore;
 import com.q_artz.vanger.openmusic.Players.ISound;
-import com.q_artz.vanger.openmusic.Players.SoundExoPlayer;
 import com.q_artz.vanger.openmusic.Players.SoundIJKPlayer;
 import com.q_artz.vanger.openmusic.Players.SoundMediaPlayer;
 import com.q_artz.vanger.openmusic.Prefs;
@@ -46,8 +27,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static com.q_artz.vanger.openmusic.ScrollingActivity.mUserAgent;
 
 /**
  * Created by Vanger on 24.02.2017.
@@ -55,14 +34,10 @@ import static com.q_artz.vanger.openmusic.ScrollingActivity.mUserAgent;
 
 public class PuzzlePresenter implements PuzzlePresenterInterface {
 
-    private String TAG = PuzzlePresenter.class.getName();
-    private DefaultLoadControl mLoadControl;
-    private TrackSelector mTrackSelector;
-    private DataSource.Factory mDataSource;
+    final private String TAG = PuzzlePresenter.class.getName();
 
     private Prefs mPrefs;
     private Context mApplicationContext;
-    private Handler mHandler;
     private static GameBoardView mView;
     private int mX;
     private int mY;
@@ -78,7 +53,6 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
     private List<Track> mCustomTrackList;
     private int[] mappingArray;
     private ISound[] puzzleSounds;
-    private ExoPlayer[] mExoPlayers;
 
     public static PuzzlePresenter getInstance(GameBoardView view){
         mView = view;
@@ -93,18 +67,10 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
         //init mX and mY by Prefs's values;
         page = 0;   // get it from Prefs
         mTracks = new ArrayList<>();
-        mX = 2;
-        mY = 3;
-    }
+//        mX = 3; mY = 4;
+//        mX = 4; mY = 5;
+        mX = 5; mY = 6;
 
-    private void initGame(){
-        isFirstPuzzle = true;
-        isBingo = false;
-        mCount = mX*mY/2;
-        countBingo = mCount;
-        attemptsCount = 0;
-        mView.updateAttempts(attemptsCount);
-        mappingArray = getRandomMapArray(mCount);
     }
 
     public void loadGame(){
@@ -116,6 +82,16 @@ public class PuzzlePresenter implements PuzzlePresenterInterface {
         stopPlayer(firstIndex);
         initGame();
         mView.replayGame();
+    }
+
+    private void initGame(){
+        isFirstPuzzle = true;
+        isBingo = false;
+        mCount = mX*mY/2;
+        countBingo = mCount;
+        attemptsCount = 0;
+        mView.updateAttempts(attemptsCount);
+        mappingArray = getRandomMapArray(mCount);
     }
 
     public void nextGame(){

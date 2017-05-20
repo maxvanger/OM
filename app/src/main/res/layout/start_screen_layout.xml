@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="false"
+        android:paddingLeft="32dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="8dp"
+        android:src="@drawable/om_logo_color_transp"/>
+
+
+    <ImageView
+        android:id="@+id/logotext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/logo"
+        android:layout_toEndOf="@+id/logo"
+        android:paddingTop="64dp"
+        android:src="@drawable/om_logotext_transp1"/>
+
+    <ImageView
+        android:id="@+id/normal_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp"
+        android:clickable="true"
+        android:src="@drawable/btn_normal"
+        />
+
+    <ImageView
+        android:id="@+id/simple_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_toStartOf="@+id/normal_mode"
+        android:layout_toLeftOf="@+id/normal_mode"
+        android:padding="16dp"
+        android:clickable="true"
+        android:src="@drawable/btn_simple"
+        />
+
+    <ImageView
+        android:id="@+id/hard_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_toEndOf="@+id/normal_mode"
+        android:layout_toRightOf="@+id/normal_mode"
+        android:padding="16dp"
+        android:clickable="true"
+        android:src="@drawable/btn_hard"/>
+
+    <ListView
+        android:id="@+id/album_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/normal_mode"
+        android:layout_centerHorizontal="true"
+        >
+
+    </ListView>
+
+</RelativeLayout>
